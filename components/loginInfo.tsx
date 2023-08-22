@@ -22,9 +22,9 @@ export default function LoginInfo() {
                     <div className="flex-1">
                         <div className="font-bold">{user.name} </div>
                         <div>
-                            <Link className="text-sm" href="/api/auth/logout">
+                            <a className="text-sm" href="/api/auth/logout">
                                 Logout
-                            </Link>
+                            </a>
                         </div>
                     </div>
 
