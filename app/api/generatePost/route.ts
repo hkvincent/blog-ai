@@ -1,0 +1,109 @@
+import { NextRequest, NextResponse } from "next/server";
+import OpenAI from 'openai';
+
+export async function POST(request: NextRequest) {
+    const openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY, // defaults to process.env["OPENAI_API_KEY"]
+    });
+
+    const token = request.nextUrl.searchParams.get("token");
+    const body = await request.json();
+
+    const { topic, keywords } = body;
+    console.log(topic, keywords);
+    if (!topic || !keywords) {
+        return NextResponse.json({ error: "Not Content" }, { status: 422 });
+    }
+    /*const response = await openai.createCompletion({
+       model: 'text-davinci-003',
+       temperature: 0,
+       max_tokens: 3600,
+       prompt: `Write a long and detailed SEO-friendly blog post about ${topic}, that targets the following comma-separated keywords: ${keywords}.
+       The content should be formatted in SEO-friendly HTML.
+       The response must also include appropriate HTML title and meta description content.
+       The return format must be stringified JSON in the following format:
+       {
+         "postContent": post content here
+         "title": title goes here
+         "metaDescription": meta description goes here
+       }`,
+     });*/
+
+    const postContentResult = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+            {
+                role: 'system',
+                content: 'You are a blog post generator.',
+            },
+            {
+                role: 'user',
+                content: `Write a long and detailed SEO-friendly blog post about ${topic}, that targets the following comma-separated keywords: ${keywords}. 
+          The response should be formatted in SEO-friendly HTML, 
+          limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.`,
+            },
+        ],
+        temperature: 0,
+    });
+
+    const postContent = postContentResult.choices[0]?.message?.content;
+
+
+    const titleResult = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+            {
+                role: 'system',
+                content: 'You are a blog post generator.',
+            },
+            {
+                role: 'user',
+                content: `Write a long and detailed SEO-friendly blog post about ${topic}, that targets the following comma-separated keywords: ${keywords}. 
+          The response should be formatted in SEO-friendly HTML, 
+          limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.`,
+            },
+            {
+                role: 'assistant',
+                content: postContent,
+            },
+            {
+                role: 'user',
+                content: 'Generate appropriate title tag text for the above blog post',
+            },
+        ],
+        temperature: 0,
+    });
+
+    const metaDescriptionResult = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+            {
+                role: 'system',
+                content: 'You are a blog post generator.',
+            },
+            {
+                role: 'user',
+                content: `Write a long and detailed SEO-friendly blog post about ${topic}, that targets the following comma-separated keywords: ${keywords}. 
+          The response should be formatted in SEO-friendly HTML, 
+          limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.`,
+            },
+            {
+                role: 'assistant',
+                content: postContent,
+            },
+            {
+                role: 'user',
+                content:
+                    'Generate SEO-friendly meta description content for the above blog post',
+            },
+        ],
+        temperature: 0,
+    });
+
+    const title = titleResult.choices[0]?.message?.content;
+    const metaDescription =
+        metaDescriptionResult.choices[0]?.message?.content;
+    console.log(postContent, title, metaDescription);
+
+    return NextResponse.json({ revalidated: true, now: Date.now() });
+}

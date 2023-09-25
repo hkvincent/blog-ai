@@ -30,4 +30,4 @@ const AppLayout = async ({ children }: { children: React.ReactNode }) => {
     );
 };
 
-export default  withPageAuthRequired(AppLayout, { returnTo: '/post/new' });
+export default withPageAuthRequired(AppLayout, { returnTo: '/post/new' });
