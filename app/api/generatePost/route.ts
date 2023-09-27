@@ -1,7 +1,7 @@
+import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0';
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from 'openai';
-
-export async function POST(request: NextRequest) {
+export default withApiAuthRequired(async function POST(request: NextRequest) {
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY, // defaults to process.env["OPENAI_API_KEY"]
     });
@@ -106,4 +106,4 @@ export async function POST(request: NextRequest) {
     console.log(postContent, title, metaDescription);
 
     return NextResponse.json({ revalidated: true, now: Date.now() });
-}
+});

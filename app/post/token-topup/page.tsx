@@ -1,9 +1,10 @@
 import React from 'react';
+import SubmitAction from './SubmitAction';
 
 const page = () => {
     return (
         <div>
-            pop up
+            <SubmitAction />
         </div>
     );
 };
