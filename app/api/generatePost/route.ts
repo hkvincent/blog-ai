@@ -1,19 +1,33 @@
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0';
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from 'openai';
-export default withApiAuthRequired(async function POST(request: NextRequest) {
+import clientPromise from '../../../lib/mongodb';
+
+
+export const POST = withApiAuthRequired(async function (request: NextRequest) {
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY, // defaults to process.env["OPENAI_API_KEY"]
     });
 
-    const token = request.nextUrl.searchParams.get("token");
     const body = await request.json();
-
     const { topic, keywords } = body;
+    const token = request.nextUrl.searchParams.get("token");
     console.log(topic, keywords);
     if (!topic || !keywords) {
         return NextResponse.json({ error: "Not Content" }, { status: 422 });
     }
+    if (topic.length > 80 || keywords.length > 80) {
+        return NextResponse.json({ error: "Exceed the length of the content" }, { status: 422 });
+    }
+
+
+    const client = await clientPromise;
+    const { user }: { user: any } = (await getSession()) || { user: undefined };
+    const db = client.db('BlogStandard');
+    const userProfile = await db.collection('users').findOne({
+        auth0Id: user.sub,
+    });
+
     /*const response = await openai.createCompletion({
        model: 'text-davinci-003',
        temperature: 0,
@@ -105,5 +119,15 @@ export default withApiAuthRequired(async function POST(request: NextRequest) {
         metaDescriptionResult.choices[0]?.message?.content;
     console.log(postContent, title, metaDescription);
 
-    return NextResponse.json({ revalidated: true, now: Date.now() });
+    const post = await db.collection('posts').insertOne({
+        postContent: postContent || '',
+        title: title || '',
+        metaDescription: metaDescription || '',
+        topic,
+        keywords,
+        userId: userProfile?._id,
+        created: new Date(),
+    });
+
+    return NextResponse.json({ postId: post.insertedId }, { status: 200 });
 });
