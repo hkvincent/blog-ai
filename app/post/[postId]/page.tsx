@@ -9,8 +9,8 @@ export default async function page({ params }: { params: { postId: string } }) {
 
   const client = await clientPromise;
   const { user }: { user: any } = (await getSession()) || { user: undefined };
-  console.log(user);
-  console.log(params.postId);
+  // console.log(user);
+  //console.log(params.postId);
   const db = client.db('BlogStandard');
   const userProfile = await db.collection('users').findOne({
     auth0Id: user.sub,
@@ -21,7 +21,7 @@ export default async function page({ params }: { params: { postId: string } }) {
     userId: userProfile?._id,
   });
 
-  console.log(post);
+  // console.log(post);
 
   if (!post) {
     redirect('/post/new');
@@ -42,8 +42,8 @@ export default async function page({ params }: { params: { postId: string } }) {
         </div>
         <div className="flex flex-wrap pt-2 gap-1">
           {post.keywords.split(',').map((keyword: string, i: number) => (
-            <div key={i} className="p-2 rounded-full bg-slate-800 text-white">
-              <FontAwesomeIcon icon={faHashtag} /> {keyword}
+            <div key={i} className="p-2 rounded-full bg-slate-800 text-white items-center justify-center align-baseline">
+              <FontAwesomeIcon icon={faHashtag} className="w-3 inline" size="sm" /> {keyword}
             </div>
           ))}
         </div>

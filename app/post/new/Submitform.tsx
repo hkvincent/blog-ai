@@ -12,11 +12,10 @@ const Submitform = () => {
     const [keywords, setKeywords] = useState('');
     const [generating, setGenerating] = useState(false);
 
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setGenerating(true);
-        console.log('SUBMITTING: ', topic, keywords);
+        // console.log('SUBMITTING: ', topic, keywords);
         try {
             const response = await fetch(`/api/generatePost`, {
                 method: 'POST',
@@ -26,7 +25,6 @@ const Submitform = () => {
                 body: JSON.stringify({ topic, keywords }),
             });
             const json = await response.json();
-            console.log('RESULT: ', json);
             if (json?.postId) {
                 router.push(`/post/${json.postId}`);
             }

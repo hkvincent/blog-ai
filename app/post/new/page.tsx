@@ -1,11 +1,8 @@
 import React from 'react'
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
-import Submitform from './submitform';
+import Submitform from './Submitform';
 
 async function page() {
-
-
-
   return (
     <div>
       <h1>Post New</h1>
