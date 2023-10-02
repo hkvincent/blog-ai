@@ -43,6 +43,10 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
        }`,
      });*/
 
+    if (userProfile?.availableTokens < 5) {
+        return NextResponse.json({ error: "Not enough tokens" }, { status: 422 });
+    }
+
     const postContentResult = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [
@@ -113,6 +117,9 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
         ],
         temperature: 0,
     });
+
+    client.db("BlogStandard").collection("users").updateOne(
+        { auth0Id: user.sub }, { $inc: { availableTokens: -5 }, $setOnInsert: { auth0Id: user.sub } }, { upsert: true })
 
     const title = titleResult.choices[0]?.message?.content;
     const metaDescription =

@@ -7,13 +7,12 @@ const SubmitAction = () => {
             method: 'POST',
         });
         const json = await result.json();
-        // console.log('RESULT: ', json);
-        //window.location.href = json.session.url;
+        console.log('RESULT: ', json);
+        window.location.href = json.session.url;
     };
 
     return (
         <div>
-            <h1>this is the token topup</h1>
             <button className="btn w-60" onClick={handleClick}>
                 Add tokens
             </button>
