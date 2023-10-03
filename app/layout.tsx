@@ -5,6 +5,7 @@ import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { DM_Sans, DM_Serif_Display } from '@next/font/google';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import { PostsProvider } from '@/context/PostContext';
 config.autoAddCss = false;
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,7 +38,9 @@ export default function RootLayout({
           className={`${dmSans.variable} ${dmSerifDisplay.variable} font-body`}
         >
           <UserProvider>
-            {children}
+            <PostsProvider>
+              {children}
+            </PostsProvider>
           </UserProvider>
         </main>
       </body>
