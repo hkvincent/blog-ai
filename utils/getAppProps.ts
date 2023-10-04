@@ -21,16 +21,10 @@ export const getAppProps = async () => {
 
     const posts = await db.collection("posts").find({
         userId: user._id
-    }).sort({ created: -1 }).toArray();
-
-    const selectedPost = await db.collection('posts').findOne({
-        _id: new ObjectId(postId),
-        userId: user._id,
-    });
+    }).limit(parseInt(process.env.NEXT_PUBLIC_POSTS_PAGE_SIZE || "5")).sort({ created: -1 }).toArray();
 
     return {
         availableTokens: user.availableTokens,
-        selectedPost: selectedPost,
         posts: posts.map(({ created, _id, userId, ...rest }) => ({
             _id: _id.toString(),
             created: created.toString(),

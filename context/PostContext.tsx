@@ -12,9 +12,10 @@ interface Post {
 interface PostsContextProps {
   posts: Post[];
   setPosts: (postsFromSSR?: Post[]) => void;
-  getPosts: ({ lastPostDate, getNewerPosts }: { lastPostDate: Date; getNewerPosts?: boolean }) => Promise<void>;
+  getPosts: ({ lastPostId, getNewerPosts }: { lastPostId: string; getNewerPosts?: boolean }) => Promise<void>;
   noMorePosts: boolean;
   deletePost: (postId: string) => void;
+  clearPosts: () => void;
 }
 
 const PostsContext = React.createContext<PostsContextProps | undefined>(undefined);
@@ -37,6 +38,8 @@ function postsReducer(state: Post[], action: any): Post[] {
       const newPosts = state.filter((post) => post._id !== action.postId);
       return newPosts;
     }
+    case 'clearPosts':
+      return [];
     default:
       return state;
   }
@@ -57,25 +60,31 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
     });
   }, []);
 
-  const setPostsFromSSR = useCallback((postsFromSSR: Post[] = []) => {
+  const setPosts = useCallback((postsFromSSR: Post[] = []) => {
     dispatch({
       type: 'addPosts',
       posts: postsFromSSR,
     });
   }, []);
 
+  const clearPosts = useCallback(() => {
+    dispatch({
+      type: 'clearPosts',
+    });
+  }, []);
+
   const getPosts = useCallback(
-    async ({ lastPostDate, getNewerPosts = false }: { lastPostDate: string | Date; getNewerPosts?: boolean }) => {
+    async ({ lastPostId, getNewerPosts = false }: { lastPostId: string; getNewerPosts?: boolean }) => {
       const result = await fetch(`/api/getPosts`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
         },
-        body: JSON.stringify({ lastPostDate, getNewerPosts }),
+        body: JSON.stringify({ lastPostId, getNewerPosts }),
       });
       const json = await result.json();
       const postsResult: Post[] = json.posts || [];
-      if (postsResult.length < 5) {
+      if (!json.hasMore) {
         setNoMorePosts(true);
       }
       dispatch({
@@ -89,7 +98,7 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
 
   return (
     <PostsContext.Provider
-      value={{ posts, setPosts: setPostsFromSSR, getPosts, noMorePosts, deletePost }}
+      value={{ posts, setPosts, getPosts, noMorePosts, deletePost, clearPosts }}
     >
       {children}
     </PostsContext.Provider>

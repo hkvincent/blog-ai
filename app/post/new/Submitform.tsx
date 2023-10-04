@@ -1,9 +1,10 @@
 "use client"
-import React from 'react';
+import React, { useContext } from 'react';
 import { faBrain } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import PostsContext from '@/context/PostContext';
 
 
 const Submitform = () => {
@@ -11,6 +12,7 @@ const Submitform = () => {
     const [topic, setTopic] = useState('');
     const [keywords, setKeywords] = useState('');
     const [generating, setGenerating] = useState(false);
+    const { clearPosts } = useContext(PostsContext)!;
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -26,6 +28,7 @@ const Submitform = () => {
             });
             const json = await response.json();
             if (json?.postId) {
+                clearPosts();
                 router.push(`/post/${json.postId}`);
                 router.refresh();
             }

@@ -86,7 +86,7 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
             },
             {
                 role: 'user',
-                content: 'Generate appropriate title tag text for the above blog post',
+                content: 'Generate appropriate title tag text for the above blog post, limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.',
             },
         ],
         temperature: 0,
@@ -112,7 +112,7 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
             {
                 role: 'user',
                 content:
-                    'Generate SEO-friendly meta description content for the above blog post',
+                    'Generate SEO-friendly meta description content for the above blog post,limited to the following HTML tags: p, h1, h2, h3, h4, h5, h6, strong, i, ul, li, ol.',
             },
         ],
         temperature: 0,

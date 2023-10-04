@@ -1,5 +1,5 @@
 import LoginInfo from '@/components/loginInfo'
-import Logo from '@/components/logo/logo'
+import Logo from '@/components/logo'
 import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image';
