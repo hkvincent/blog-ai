@@ -3,13 +3,6 @@ import clientPromise from "@/lib/mongodb";
 import stripeInit, { Stripe } from 'stripe';
 import { headers } from 'next/headers'
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
-
-
 const stripe = new stripeInit(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2022-11-15' });
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 // 4242 4242 4242 4242

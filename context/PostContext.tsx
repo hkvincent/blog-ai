@@ -16,6 +16,7 @@ interface PostsContextProps {
   noMorePosts: boolean;
   deletePost: (postId: string) => void;
   clearPosts: () => void;
+  setHasMorePosts: (hasMore: boolean) => void;
 }
 
 const PostsContext = React.createContext<PostsContextProps | undefined>(undefined);
@@ -85,6 +86,7 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
       const json = await result.json();
       const postsResult: Post[] = json.posts || [];
       if (!json.hasMore) {
+        console.log('setHasMorePosts', json.hasMore);
         setNoMorePosts(true);
       }
       dispatch({
@@ -95,10 +97,15 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
     []
   );
 
+  const setHasMorePosts = useCallback((hasMore: boolean) => {
+
+    setNoMorePosts(!hasMore);
+  }, []);
+
 
   return (
     <PostsContext.Provider
-      value={{ posts, setPosts, getPosts, noMorePosts, deletePost, clearPosts }}
+      value={{ posts, setPosts, getPosts, noMorePosts, deletePost, clearPosts, setHasMorePosts }}
     >
       {children}
     </PostsContext.Provider>

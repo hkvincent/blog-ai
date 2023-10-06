@@ -23,8 +23,26 @@ export const getAppProps = async () => {
         userId: user._id
     }).limit(parseInt(process.env.NEXT_PUBLIC_POSTS_PAGE_SIZE || "5")).sort({ created: -1 }).toArray();
 
+    let hasMore = false
+    if (Array.isArray(posts) && posts.length > 0) {
+        const lastCreatedDate = posts[posts.length - 1].created;
+        const hasMorePost = await db
+            .collection('posts')
+            .find({
+                userId: user?._id,
+                created: { ['$lt']: lastCreatedDate },
+            })
+            .limit(1)
+            .sort({ created: -1 })
+            .toArray();
+        hasMore = Array.isArray(hasMorePost) && hasMorePost.length > 0;
+    }
+
+    console.log("hasMore", hasMore)
+
     return {
         availableTokens: user.availableTokens,
+        hasMorePost: hasMore,
         posts: posts.map(({ created, _id, userId, ...rest }) => ({
             _id: _id.toString(),
             created: created.toString(),

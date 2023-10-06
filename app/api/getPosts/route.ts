@@ -42,7 +42,6 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
                 .toArray();
             hasMore = Array.isArray(hasMorePost) && hasMorePost.length > 0;
         }
-        console.log('hasMore', hasMore);
         return NextResponse.json({ posts, hasMore }, { status: 200 });
     } catch (e) {
         return NextResponse.json({ error: e }, { status: 500 });
