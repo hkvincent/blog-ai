@@ -15,12 +15,12 @@ export default function LoginInfo() {
         <>
             {user ? (
                 <>
-                    <div className="min-w-[50px]" >
+                    <div className="md:min-w-[50px] min-w-[20px]" >
                         <Image src={user.picture ?? ""} alt={user.name ?? ""} width="50" height="50"
                             className="rounded-full" />
                     </div>
                     <div className="flex-1">
-                        <div className="font-bold">{user.name} </div>
+                        <div className="font-bold text-sm md:text-xl">{user.name} </div>
                         <div>
                             <a className="text-sm" href="/api/auth/logout">
                                 Logout

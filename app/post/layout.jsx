@@ -26,7 +26,7 @@ const AppLayout = async ({ children }) => {
                 <div className="px-4 flex-1 max-h-[25vh] overflow-auto md:max-h-full md:overflow-auto bg-gradient-to-b from-slate-800 to-cyan-800">
                     <PageList postList={appProps.posts} hasMorePosts={appProps.hasMorePost} />
                 </div>
-                <div className="bg-cyan-800 flex items-center gap-2 border-t border-t-black/50 px-2 h-24  md:border-t md:border-t-black/50 md:px-2 md:h-24 fixed top-0 right-0 md:relative">
+                <div className="md:bg-cyan-800 flex items-center gap-2 border-t border-t-black/50 px-2 h-24  md:border-t md:border-t-black/50 md:px-2 md:h-24 fixed top-0 right-0 md:relative">
                     <LoginInfo />
                 </div>
             </div>
