@@ -10,14 +10,17 @@ const PageList = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (selectedPostId) {
-            const exists = posts.find((post: any) => post._id === selectedPostId);
-            if (!exists) {
-                if (typeof selectedPostId === 'string') {
-                    getPosts({ selectedPostId: selectedPostId });
-                } else if (typeof selectedPostId === 'object') {
-                    getPosts({ selectedPostId: selectedPostId[0] });
-                }
+
+        const exists = posts.find((post: any) => post._id === selectedPostId);
+
+        if (!exists) {
+            if (typeof selectedPostId === 'string') {
+                getPosts({ selectedPostId: selectedPostId });
+            } else if (typeof selectedPostId === 'object') {
+                getPosts({ selectedPostId: selectedPostId[0] });
+            } else if (posts.length === 0) {
+                console.log('PageList useEffect getPosts');
+                getPosts({});
             }
         }
     }, [setPosts, selectedPostId, getPosts]);
