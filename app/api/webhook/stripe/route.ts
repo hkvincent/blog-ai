@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
             const auth0Id = paymentIntent.metadata.sub;
             try {
                 client.db("BlogStandard").collection("users").updateOne(
-                    { auth0Id }, { $inc: { availableTokens: 10 }, $setOnInsert: { auth0Id } }, { upsert: true }
+                    { auth0Id }, { $inc: { availableTokens: 50 }, $setOnInsert: { auth0Id } }, { upsert: true }
                 );
             } catch (error) {
                 return NextResponse.json({ message: "Error", error }, { status: 500 });
