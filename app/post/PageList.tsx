@@ -43,7 +43,7 @@ const PageList = ({ postList, hasMorePosts }: { postList: any[], hasMorePosts: b
             {!noMorePosts && (
                 <div
                     onClick={loadMorePosts}
-                    className="hover:underline text-sm text-slate-400 text-center cursor-pointer mt-4"
+                    className="hover:underline text-sm text-slate-400 text-center cursor-pointer my-4"
                 >
                     {isLoading ? (
                         <div className="flex justify-center items-center">
