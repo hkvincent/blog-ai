@@ -12,11 +12,13 @@ interface Post {
 interface PostsContextProps {
   posts: Post[];
   setPosts: (postsFromSSR?: Post[]) => void;
-  getPosts: ({ lastPostId, getNewerPosts }: { lastPostId: string; getNewerPosts?: boolean }) => Promise<void>;
+  getPosts: ({ selectedPostId, lastPostId, searchTerm, searchAction }: { selectedPostId?: string; lastPostId?: string, searchTerm?: string, searchAction?: boolean }) => Promise<void>;
   noMorePosts: boolean;
   deletePost: (postId: string) => void;
   clearPosts: () => void;
   setHasMorePosts: (hasMore: boolean) => void;
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
 }
 
 const PostsContext = React.createContext<PostsContextProps | undefined>(undefined);
@@ -26,6 +28,7 @@ export default PostsContext;
 function postsReducer(state: Post[], action: any): Post[] {
   switch (action.type) {
     case 'addPosts': {
+      console.log('addPosts');
       const newPosts = [...state];
       action.posts.forEach((post: Post) => {
         const exists = newPosts.find((p) => p._id === post._id);
@@ -41,6 +44,10 @@ function postsReducer(state: Post[], action: any): Post[] {
     }
     case 'clearPosts':
       return [];
+    case 'searchPosts': {
+      console.log('searchPosts');
+      return [...action.posts];
+    }
     default:
       return state;
   }
@@ -53,6 +60,7 @@ interface PostsProviderProps {
 export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
   const [posts, dispatch] = useReducer(postsReducer, []);
   const [noMorePosts, setNoMorePosts] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const deletePost = useCallback((postId: string) => {
     dispatch({
@@ -75,27 +83,56 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
   }, []);
 
   const getPosts = useCallback(
-    async ({ lastPostId, getNewerPosts = false }: { lastPostId: string; getNewerPosts?: boolean }) => {
+    async ({ selectedPostId, lastPostId, searchTerm, searchAction }: { selectedPostId?: string; lastPostId?: string, searchTerm?: string, searchAction?: boolean }) => {
+      console.log('postContext getPosts', selectedPostId, lastPostId, searchTerm);
       const result = await fetch(`/api/getPosts`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
         },
-        body: JSON.stringify({ lastPostId, getNewerPosts }),
+        body: JSON.stringify({ selectedPostId, lastPostId, searchTerm }),
       });
       const json = await result.json();
       const postsResult: Post[] = json.posts || [];
+
+      console.log('postContext postsResult', postsResult);
       if (!json.hasMore) {
-        console.log('setHasMorePosts', json.hasMore);
+        console.log('postContext setHasMorePosts', json.hasMore);
         setNoMorePosts(true);
+      } else {
+        setNoMorePosts(false);
       }
+
       dispatch({
-        type: 'addPosts',
+        type: searchAction ? 'searchPosts' : 'addPosts',
         posts: postsResult,
       });
     },
     []
   );
+
+  // const saerchPosts = useCallback(
+  //   async ({ keyword }: { keyword: string; }) => {
+  //     const result = await fetch(`/api/getPosts`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'content-type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ lastPostId, getNewerPosts }),
+  //     });
+  //     const json = await result.json();
+  //     const postsResult: Post[] = json.posts || [];
+  //     if (!json.hasMore) {
+  //       console.log('setHasMorePosts', json.hasMore);
+  //       setNoMorePosts(true);
+  //     }
+  //     dispatch({
+  //       type: 'addPosts',
+  //       posts: postsResult,
+  //     });
+  //   },
+  //   []
+  // );
 
   const setHasMorePosts = useCallback((hasMore: boolean) => {
 
@@ -105,7 +142,7 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
 
   return (
     <PostsContext.Provider
-      value={{ posts, setPosts, getPosts, noMorePosts, deletePost, clearPosts, setHasMorePosts }}
+      value={{ posts, setPosts, getPosts, noMorePosts, deletePost, clearPosts, setHasMorePosts, searchTerm, setSearchTerm }}
     >
       {children}
     </PostsContext.Provider>
