@@ -84,7 +84,6 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
 
   const getPosts = useCallback(
     async ({ selectedPostId, lastPostId, searchTerm, searchAction }: { selectedPostId?: string; lastPostId?: string, searchTerm?: string, searchAction?: boolean }) => {
-      console.log('postContext getPosts', selectedPostId, lastPostId, searchTerm);
       const result = await fetch(`/api/getPosts`, {
         method: 'POST',
         headers: {
@@ -97,7 +96,6 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
 
       console.log('postContext postsResult', postsResult);
       if (!json.hasMore) {
-        console.log('postContext setHasMorePosts', json.hasMore);
         setNoMorePosts(true);
       } else {
         setNoMorePosts(false);

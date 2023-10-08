@@ -34,6 +34,7 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
 
             query.created = { [selectedPostId ? '$gte' : '$lt']: lastPost?.created };
         } else {
+            console.log('else');
             posts = await db.collection("posts").find({
                 userId: userProfile?._id
             }).limit(parseInt(process.env.NEXT_PUBLIC_POSTS_PAGE_SIZE || "5")).sort({ created: -1 }).toArray();
@@ -80,7 +81,7 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
                     formattedSearchTerm = formattedSearchTerm.split('&').map((term: string) => `"${term}"`).join(' ');
                 }
                 console.log(formattedSearchTerm);
-                query['$text'] = { $search: formattedSearchTerm };
+                hasMoreQuery['$text'] = { $search: formattedSearchTerm };
             }
 
             const hasMorePost = await db.collection('posts')
@@ -88,7 +89,6 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
                 .limit(1)
                 .sort({ created: -1 })
                 .toArray();
-
             hasMore = hasMorePost.length > 0;
         }
 
