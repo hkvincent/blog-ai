@@ -15,9 +15,6 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
     try {
         const { user }: { user: any } = (await getSession()) || { user: undefined };
         const { selectedPostId, lastPostId, searchTerm } = await request.json();
-        console.log('selectedPostId', selectedPostId);
-        console.log('lastPostId', lastPostId);
-        console.log('searchTerm', searchTerm);
 
         const client = await clientPromise;
         const db = client.db('BlogStandard');
