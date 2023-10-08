@@ -40,7 +40,12 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
         }
 
         if (searchTerm) {
-            query['$text'] = { $search: searchTerm };
+            let formattedSearchTerm = searchTerm;
+            if (searchTerm.includes('&')) {
+                formattedSearchTerm = formattedSearchTerm.split('&').map((term: string) => `"${term}"`).join(' ');
+            }
+            console.log(formattedSearchTerm);
+            query['$text'] = { $search: formattedSearchTerm };
         }
 
         if (Object.keys(query).length > 1) {
@@ -70,7 +75,12 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
             const hasMoreQuery: QueryType = { userId: userProfile?._id, created: { ['$lt']: lastCreatedDate } };
 
             if (searchTerm) {
-                hasMoreQuery['$text'] = { $search: searchTerm };
+                let formattedSearchTerm = searchTerm;
+                if (searchTerm.includes('&')) {
+                    formattedSearchTerm = formattedSearchTerm.split('&').map((term: string) => `"${term}"`).join(' ');
+                }
+                console.log(formattedSearchTerm);
+                query['$text'] = { $search: formattedSearchTerm };
             }
 
             const hasMorePost = await db.collection('posts')
