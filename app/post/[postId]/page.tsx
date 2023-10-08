@@ -30,7 +30,7 @@ export default async function page({ params }: { params: { postId: string } }) {
 
   return (
     <div className="overflow-auto h-full px-6 md:px-0">
-      <div className="max-w-screen-sm mx-auto">
+      <div className="max-w-screen-sm md:max-w-screen-lg mx-auto">
         <div className="text-sm font-bold mt-6 p-2 bg-stone-200 rounded-sm">
           SEO title and meta description
         </div>
