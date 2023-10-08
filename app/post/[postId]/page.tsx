@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons/faHashtag';
 import { redirect } from 'next/navigation';
 import DeleteButton from './DeleteButton';
+
+
 export default async function page({ params }: { params: { postId: string } }) {
 
   const client = await clientPromise;
@@ -59,3 +61,4 @@ export default async function page({ params }: { params: { postId: string } }) {
     </div>
   )
 }
+
