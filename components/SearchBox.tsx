@@ -7,20 +7,22 @@ import { useDebounce } from 'use-debounce';
 const SearchBox = () => {
     const { getPosts, searchTerm, setSearchTerm } = useContext(PostsContext)!;
     const { postId: selectedPostId } = useParams();
-    const [debouncedQuery] = useDebounce(searchTerm, 600);
+    const [debouncedQuery] = useDebounce(searchTerm, 800);
     useEffect(() => {
-        if (debouncedQuery.length > 1) {
+        if (debouncedQuery) {
             const controller = new AbortController();
             (async () => {
                 getPosts({ searchTerm: debouncedQuery, searchAction: true });
             })();
             return () => controller.abort();
-        } else {
+        } else if (selectedPostId) {
             if (typeof selectedPostId === 'string') {
                 getPosts({ selectedPostId: selectedPostId, searchAction: true });
             } else if (typeof selectedPostId === 'object') {
                 getPosts({ selectedPostId: selectedPostId[0], searchAction: true });
             }
+        } else {
+            getPosts({ searchAction: true });
         }
     }, [debouncedQuery, getPosts]);
 
