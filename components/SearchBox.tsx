@@ -8,23 +8,38 @@ const SearchBox = () => {
     const { getPosts, searchTerm, setSearchTerm } = useContext(PostsContext)!;
     const { postId: selectedPostId } = useParams();
     const [debouncedQuery] = useDebounce(searchTerm, 800);
+
     useEffect(() => {
-        if (debouncedQuery) {
-            const controller = new AbortController();
-            (async () => {
-                getPosts({ searchTerm: debouncedQuery, searchAction: true });
-            })();
-            return () => controller.abort();
-        } else if (selectedPostId) {
-            if (typeof selectedPostId === 'string') {
-                getPosts({ selectedPostId: selectedPostId, searchAction: true });
-            } else if (typeof selectedPostId === 'object') {
-                getPosts({ selectedPostId: selectedPostId[0], searchAction: true });
+        const controller = new AbortController();
+
+        const fetchPostsByQuery = async () => {
+            if (debouncedQuery) {
+                await getPosts({ searchTerm: debouncedQuery, searchAction: true });
             }
-        } else {
+        };
+
+        const fetchPostsById = () => {
+            if (selectedPostId) {
+                const id = typeof selectedPostId === 'object' ? selectedPostId[0] : selectedPostId;
+                getPosts({ selectedPostId: id, searchAction: true });
+            }
+        };
+
+        const fetchDefaultPosts = () => {
             getPosts({ searchAction: true });
+        };
+
+        if (debouncedQuery) {
+            fetchPostsByQuery();
+        } else if (selectedPostId) {
+            fetchPostsById();
+        } else {
+            fetchDefaultPosts();
         }
+
+        return () => controller.abort();
     }, [debouncedQuery, getPosts]);
+
 
     return (
         <div className="relative">
