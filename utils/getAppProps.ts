@@ -1,6 +1,7 @@
 import clientPromise from "@/lib/mongodb"
 import { getSession } from "@auth0/nextjs-auth0"
 import { ObjectId } from "mongodb"
+import { headers } from 'next/headers';
 
 export const getAppProps = async () => {
 
@@ -11,6 +12,10 @@ export const getAppProps = async () => {
     const user = await db.collection("users").findOne({
         auth0Id: userSession?.sub
     })
+
+    const headersList = headers();
+    const ip = headersList.get("x-forwarded-for");
+    console.log({ ip, headersList, userSession })
 
     if (!user) {
         return {
