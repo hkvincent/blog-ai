@@ -31,7 +31,6 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
 
             query.created = { [selectedPostId ? '$gte' : '$lt']: lastPost?.created };
         } else {
-            console.log('else');
             posts = await db.collection("posts").find({
                 userId: userProfile?._id
             }).limit(parseInt(process.env.NEXT_PUBLIC_POSTS_PAGE_SIZE || "5")).sort({ created: -1 }).toArray();

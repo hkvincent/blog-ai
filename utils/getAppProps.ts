@@ -15,7 +15,7 @@ export const getAppProps = async () => {
 
     const headersList = headers();
     const ip = headersList.get("x-forwarded-for");
-    console.log({ ip, headersList, userSession })
+    console.log({ ip, headersList, session })
 
     if (!user) {
         // client.db("BlogStandard").collection("users").updateOne(
@@ -36,6 +36,7 @@ export const getAppProps = async () => {
         const insertResult = await db.collection('users').insertOne({
             auth0Id: userSession?.sub,
             userName: userSession?.name,
+            email: userSession?.email,
             availableTokens: initialTokens,
             createdAt: new Date(),
             lastLogin: new Date(),
