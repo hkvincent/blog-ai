@@ -18,9 +18,33 @@ export const getAppProps = async () => {
     console.log({ ip, headersList, userSession })
 
     if (!user) {
+        // client.db("BlogStandard").collection("users").updateOne(
+        //     { auth0Id }, { $inc: { availableTokens: 50 }, $setOnInsert: { auth0Id } }, { upsert: true }
+        // );
+        // Check if a user with the given IP address already exists
+        // Extract the IP address without the port
+        const fullIp = ip || "";
+        const ipWithoutPort = fullIp.split(":")[0];
+
+        // Check if a user with the given IP address already exists
+        const existingUser = await db.collection('users').findOne({ ip: ipWithoutPort });
+
+        // Initialize tokens based on whether the IP address is already registered
+        const initialTokens = existingUser ? 0 : 5;
+
+        // Insert the new user
+        const insertResult = await db.collection('users').insertOne({
+            auth0Id: userSession?.sub,
+            userName: userSession?.name,
+            availableTokens: initialTokens,
+            createdAt: new Date(),
+            lastLogin: new Date(),
+            ip: ipWithoutPort,
+        });
+
         return {
-            availableTokens: 0,
-        }
+            availableTokens: initialTokens,
+        };
     }
 
     // const posts = await db.collection("posts").find({
