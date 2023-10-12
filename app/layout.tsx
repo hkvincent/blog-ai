@@ -15,6 +15,10 @@ export const metadata = {
     template: '%s | BlogV',
   },
   description: 'Generating your blog from using AI.',
+  appleWebApp: {
+    title: "Brain GPT",
+    statusBarStyle: "default",
+  },
 };
 
 
