@@ -16,8 +16,11 @@ export default function LoginInfo() {
             {user ? (
                 <>
                     <div className="md:min-w-[50px] min-w-[20px]" >
-                        <Image src={user.picture ?? ""} alt={user.name ?? ""} width="50" height="50"
-                            className="rounded-full" />
+                        <Link href="/post/token-topup" >
+                            <Image src={user.picture ?? ""} alt={user.name ?? ""} width="50" height="50"
+                                className="rounded-full" />
+                        </Link>
+
                     </div>
                     <div className="flex-1">
                         <div className="font-bold text-sm md:text-xl">{user.name} </div>
