@@ -37,6 +37,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/site.webmanifest"></link>
+        <script src="/serviceWorkerRegister.js" defer></script>
+      </head>
       <body>
         <main
           className={`${dmSans.variable} ${dmSerifDisplay.variable} font-body`}
