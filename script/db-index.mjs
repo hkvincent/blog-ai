@@ -22,7 +22,6 @@ export default clientPromise;
 async function connectDB() {
     try {
         const client = await clientPromise;
-        console.log("Connected to MongoDB");
         const db = client.db('BlogStandard');
 
         try {

@@ -7,8 +7,7 @@ import { redirect } from 'next/navigation';
 async function page() {
   const client = await clientPromise;
   const { user }: { user: any } = (await getSession()) || { user: undefined };
-  // console.log(user);
-  //console.log(params.postId);
+
   const db = client.db('BlogStandard');
   const userProfile = await db.collection('users').findOne({
     auth0Id: user.sub,

@@ -12,8 +12,6 @@ export default async function page({ params }: { params: { postId: string } }) {
 
   const client = await clientPromise;
   const { user }: { user: any } = (await getSession()) || { user: undefined };
-  // console.log(user);
-  //console.log(params.postId);
   const db = client.db('BlogStandard');
   const userProfile = await db.collection('users').findOne({
     auth0Id: user.sub,
@@ -24,7 +22,6 @@ export default async function page({ params }: { params: { postId: string } }) {
     userId: userProfile?._id,
   });
 
-  // console.log(post);
 
   if (!post) {
     redirect('/post/new');

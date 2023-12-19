@@ -12,7 +12,6 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
     const body = await request.json();
     const { topic, keywords } = body;
     const token = request.nextUrl.searchParams.get("token");
-    // console.log(topic, keywords);
     if (!topic || !keywords) {
         return NextResponse.json({ error: "Not Content" }, { status: 422 });
     }
@@ -124,7 +123,6 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
     const title = titleResult.choices[0]?.message?.content;
     const metaDescription =
         metaDescriptionResult.choices[0]?.message?.content;
-    // console.log(postContent, title, metaDescription);
 
     const post = await db.collection('posts').insertOne({
         postContent: postContent || '',

@@ -9,7 +9,6 @@ const stripe = new stripeInit(process.env.STRIPE_SECRET_KEY!, { apiVersion: '202
 
 export async function POST(request: NextRequest) {
     const { user }: { user: any } = (await getSession()) || { user: undefined };
-    console.log(process.env.STRIPE_PRODUCT_PRICE_ID);
     const lineItems = [
         {
             price: process.env.STRIPE_PRODUCT_PRICE_ID,
@@ -54,7 +53,7 @@ export async function POST(request: NextRequest) {
     //         { auth0Id: user.sub }, { $inc: { availableTokens: 10 }, $setOnInsert: { auth0Id: user.sub } }, { upsert: true }
     //     );
     // } catch (error) {
-    //     // console.log(error);
+    //     console.log(error);
     //     return NextResponse.json({ error: "Not Content" }, { status: 422 });
     // }
     return NextResponse.json({ session: checkoutSession }, { status: 200 });

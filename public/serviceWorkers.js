@@ -12,4 +12,4 @@ self.addEventListener("install", function (event) {
   );
 });
 
-self.addEventListener("fetch", (e) => {});
+self.addEventListener("fetch", (e) => { });

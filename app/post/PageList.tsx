@@ -19,7 +19,6 @@ const PageList = () => {
             } else if (typeof selectedPostId === 'object') {
                 getPosts({ selectedPostId: selectedPostId[0] });
             } else if (posts.length === 0) {
-                console.log('PageList useEffect getPosts');
                 getPosts({});
             }
         }

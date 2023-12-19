@@ -28,7 +28,6 @@ export default PostsContext;
 function postsReducer(state: Post[], action: any): Post[] {
   switch (action.type) {
     case 'addPosts': {
-      console.log('addPosts');
       const newPosts = [...state];
       action.posts.forEach((post: Post) => {
         const exists = newPosts.find((p) => p._id === post._id);
@@ -45,7 +44,6 @@ function postsReducer(state: Post[], action: any): Post[] {
     case 'clearPosts':
       return [];
     case 'searchPosts': {
-      console.log('searchPosts');
       return [...action.posts];
     }
     default:
@@ -94,7 +92,6 @@ export const PostsProvider: React.FC<PostsProviderProps> = ({ children }) => {
       const json = await result.json();
       const postsResult: Post[] = json.posts || [];
 
-      console.log('postContext postsResult', postsResult);
       if (!json.hasMore) {
         setNoMorePosts(true);
       } else {

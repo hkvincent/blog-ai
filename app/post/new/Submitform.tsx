@@ -17,7 +17,6 @@ const Submitform = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setGenerating(true);
-        // console.log('SUBMITTING: ', topic, keywords);
         try {
             const response = await fetch(`/api/generatePost`, {
                 method: 'POST',

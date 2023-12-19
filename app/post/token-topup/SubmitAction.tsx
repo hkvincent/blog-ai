@@ -7,7 +7,6 @@ const SubmitAction = () => {
             method: 'POST',
         });
         const json = await result.json();
-        // console.log('RESULT: ', json);
         window.location.href = json.session.url;
     };
 

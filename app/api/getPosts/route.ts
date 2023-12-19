@@ -41,7 +41,6 @@ export const POST = withApiAuthRequired(async function (request: NextRequest) {
             if (searchTerm.includes('&')) {
                 formattedSearchTerm = formattedSearchTerm.split('&').map((term: string) => `"${term}"`).join(' ');
             }
-            console.log(formattedSearchTerm);
             query['$text'] = { $search: formattedSearchTerm };
         }
 
